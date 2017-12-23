@@ -40,7 +40,7 @@ public:
         } else {
             {
                 std::unique_lock<std::mutex> lock(vector_mutex);
-                //TODO perfect forward fun
+                
 
                 auto job = [p_task]() -> void {//really weird
                     (*p_task)();
@@ -72,25 +72,25 @@ private:
     std::condition_variable cond;
 };
 
-//std::function<int()> funGen() {
-//    return ([]() -> int {
-//        int a=(rand()%10);
-//        std::this_thread::sleep_for(std::chrono::operator""ms(a));
-//        return 3;
-//    });
-//}
-//
-//int main() {
-//    threadpool<int> threadpool(200);
-//    std::vector<std::future<int>> futures;
-//    for (int i = 0; i <10000 ; ++i) {
-//        futures.push_back(threadpool.push(funGen()));
-//    }
-//    int res=0;
-//    for (int j = 0; j < futures.size(); ++j) {
-//        res+=futures[j].get();
-//    }
-//
-//    std::cout<<res<<std::endl;
-//    return 0;
-//}
+std::function<int()> funGen() {
+   return ([]() -> int {
+       int a=(rand()%10);
+       std::this_thread::sleep_for(std::chrono::operator""ms(a));
+       return 3;
+   });
+}
+
+int main() {
+   threadpool<int> threadpool(200);
+   std::vector<std::future<int>> futures;
+   for (int i = 0; i <10000 ; ++i) {
+       futures.push_back(threadpool.push(funGen()));
+   }
+   int res=0;
+   for (int j = 0; j < futures.size(); ++j) {
+       res+=futures[j].get();
+   }
+
+   std::cout<<res<<std::endl;
+   return 0;
+}
